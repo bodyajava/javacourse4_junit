@@ -20,23 +20,30 @@ import com.tngtech.java.junit.dataprovider.DataProvider;
 import com.tngtech.java.junit.dataprovider.DataProviderRunner;
 import com.tngtech.java.junit.dataprovider.UseDataProvider;
 
-@RunWith(DataProviderRunner.class)
-public class FileCreationTests extends FileCreationBase implements MyCategories {
+@RunWith(Parameterized.class)
+public class FileCreationTests2 extends FileCreationBase implements MyCategories {
 	
-	@DataProvider
-	public static Object[] files() {
-		return new Object[] {"fileTempTest"};
+	@Parameters(name = "file1:{0}")
+	public static Collection<Object[]> files() throws IOException {
+		return (Collection<Object[]>) loadContactsFromCsvFile(new File("fileNames1.txt"));
+	}
+		
+	private String file1;
+	
+	public FileCreationTests2(String file1) {
+		this.file1 = file1;
 	}
 	
 	@Test 
 	@Category(PositiveTests.class)
 	@UseDataProvider("files")
-	public void test0(String file) {
-		String path = basedir + tmp_dir_prefix + "/" + file;
+	public void test0() {
+		String path = basedir + tmp_dir_prefix + "/" + file1;
 		File file1 = new File(path);
 		
 		try {
 			if (file1.createNewFile()) {
+				System.out.println("FileCreationTests2. Test0 executing...");
 				System.out.println("File " + file1 + " is created");
 			}
 		} catch (IOException e) {e.printStackTrace();}
@@ -44,7 +51,7 @@ public class FileCreationTests extends FileCreationBase implements MyCategories 
 		Assert.assertTrue(file1.exists());
 	} 
 	
-	@Test 
+	//@Test 
 	@Category(PositiveTests.class)
 	public void test2() {
 		String path = basedir + tmp_dir_prefix + "/" + "fileTempTest2.txt";
@@ -59,7 +66,7 @@ public class FileCreationTests extends FileCreationBase implements MyCategories 
 		Assert.assertTrue(file1.exists());
 	} 
 	
-	@Test 
+	//@Test 
 	@Category(PositiveTests.class)
 	public void test3() {
 		String path = basedir + tmp_dir_prefix + "/" + "fileTempTest3.txt";
@@ -74,7 +81,7 @@ public class FileCreationTests extends FileCreationBase implements MyCategories 
 		Assert.assertTrue(file1.exists());
 	} 
 	
-	@Test 
+	//@Test 
 	@Category(NegativeTests.class)
 	public void test4() {
 		String path = basedir + tmp_dir_prefix + "/" + "fileTempTest777.txt";
@@ -83,7 +90,7 @@ public class FileCreationTests extends FileCreationBase implements MyCategories 
 		Assert.assertFalse(file1.exists());
 	} 
 	
-	@Test 
+	//@Test 
 	@Category(BrokenTests.class)
 	public void test5() {
 		String path = basedir + tmp_dir_prefix + "/" + "fileTempTest888.txt";
